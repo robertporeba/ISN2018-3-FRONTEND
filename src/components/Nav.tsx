@@ -16,6 +16,12 @@ const Nav=() =>{
             <li className="nav-item-active">
             <Link to="/register" className="nav-link  "  >Rejestracja</Link>
             </li>
+            <li className="nav-item-active">
+            <Link to="/board" className="nav-link  "  >Tablica</Link>
+            </li>
+            <li className="nav-item-active">
+            <Link to="/createtask" className="nav-link  "  >Task</Link>
+            </li>
           </ul>
         
       </nav>

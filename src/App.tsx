@@ -3,6 +3,8 @@ import { BrowserRouter, Route,Routes } from 'react-router-dom';
 
 import './App.css';
 import Nav from './components/Nav';
+import Board from './Pages/Board';
+import CreateTask from './Pages/CreateTask';
 
 import Home from './Pages/Home';
 import Login from './Pages/Login';
@@ -28,6 +30,15 @@ function App() {
 <Route
   path='/Register'
   element={<Register />}
+/>
+<Route
+  path='/Board'
+  element={<Board />}
+/>
+
+<Route
+  path='/CreateTask'
+  element={<CreateTask />}
 />
 </Routes>
 </BrowserRouter>
