@@ -1,6 +1,5 @@
 import { IAuth } from '../interfaces/auth';
-import axiosInstance from '../utils/axios';
-
+import axiosInstance from '../Utils/axios';
 class AuthService {
 	login(loginData: IAuth) {
 		return axiosInstance
