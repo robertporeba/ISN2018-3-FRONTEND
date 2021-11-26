@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { v4 as uuid } from 'uuid';
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
+import "./App.css";
 
 const backendItems = [
     { id: uuid(), content: "Zadanie 1" },
@@ -62,7 +63,24 @@ const onDragEnd = (result: any, columns: any, setColumns: any) => {
 function App() {
     const [columns, setColumns] = useState(backendColumns);
     return (
-        <div style={{ display: "flex", justifyContent: "center", height: "100vh" }}>
+        <div>
+            <div className="heading">KanbanMusic</div>
+        <div style={{ display: "flex", justifyContent: "center", height: "100vh" }}>  
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+                <h2>{"Nowe zadanie"}</h2>
+                <div style={{ marginLeft: 30, marginRight: 30 }}>
+                        <div style={{ display: "flex", alignItems: "center" }}>
+                            <input
+                                type="text"
+                                placeholder="Wpisz zadanie"
+                                className="box"
+                            />
+                            <button type="submit" className="ok">
+                                OK
+                            </button>
+                        </div>
+                </div>
+            </div>
             <DragDropContext onDragEnd={result => onDragEnd(result, columns, setColumns)}>
                 {Object.entries(columns).map(([columnId, column]) => {
                     return (
@@ -77,9 +95,9 @@ function App() {
                                                 ref={provided.innerRef}
                                                 style={{
                                                     background: snapshot.isDraggingOver ? "#808080" : "#d3d3d3",
-                                                    padding: 4,
+                                                    padding: 1,
                                                     width: 300,
-                                                    minHeight: 700
+                                                    minHeight: 35
                                                 }}
                                             >
                                                 {column.items.map((item, index) => {
@@ -90,7 +108,7 @@ function App() {
                                                                     <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}
                                                                         style={{
                                                                             userSelect: "none",
-                                                                            margin: "5px 5px 10px 5px",
+                                                                            margin: "6px 6px 6px 6px",
                                                                             minHeight: "35px",
                                                                             padding: 10,
                                                                             color: "#FFFAFA",
@@ -116,6 +134,7 @@ function App() {
                     )
                 })}
             </DragDropContext>
+            </div>
         </div>
     );
 }
