@@ -1,40 +1,40 @@
 import React, { useEffect, useState } from 'react';
 import { IAuth } from '../../../interfaces/auth';
-import authService from '../../../services/auth.service';
-import registerService from '../../../services/register.service';
 import { useForm } from 'react-hook-form';
+import { history } from '../../../utils/history';
+import { useDispatch } from 'react-redux';
+import useUserIdentity from '../../../hooks/use-user-identity';
+import { registerToSystem } from '../../../actions/auth';
+
 import './Register.scss';
 
 function Register() {
+	const dispatch: any = useDispatch();
+	const isAuth = useUserIdentity();
 	const [invalidData, setInvalidData] = useState(false);
-
 	const {
 		register,
 		handleSubmit,
 		formState: { errors },
 	} = useForm();
 	const onSubmit = (data: any) => {
-		registerService
-			.register({
-				email: data.email,
-				password: data.password,
-				type: data.type,
-			})
-			.then((res) => {
-				console.log(JSON.stringify(res));
-			})
-			.catch((e) => {
-				setInvalidData(true);
-			});
+		const registerModel: IAuth = {
+			email: data.email,
+			password: data.password,
+			type: data.type,
 		};
+		dispatch(registerToSystem(registerModel))
+			.then(() => {
+				console.log('success');
+			})
+			.catch(() => {
+				setInvalidData(false);
+			});
+	};
 
-		
-	// useEffect(() => {
-	// 	console.log('click');
-	// 	userService.getUserInfo().then((res) => {
-	// 		console.log(JSON.stringify(res));
-	// 	});
-	// }, [loginData]);
+	if (isAuth.userRoles !== null) {
+		history.push('/admin-panel');
+	}
 
 	return (
 		<div className="register-container">
@@ -53,12 +53,12 @@ function Register() {
 				<label className="login-container__form__password">Hasło</label>
 				<br />
 				<input type="password" {...register('password', { required: true })} />
-				<br /><br />
-				<select  {...register('type')}>
-        <option value="User">User</option>
-        <option value="Admin">Admin</option>
-       
-      </select>
+				<br />
+				<br />
+				<select {...register('type')}>
+					<option value="User">User</option>
+					<option value="Admin">Admin</option>
+				</select>
 				{errors.email && (
 					<p className="login-container__form__error">Email jest wymagany</p>
 				)}
@@ -66,7 +66,9 @@ function Register() {
 					<p className="login-container__form__error">Hasło jest wymagane</p>
 				)}
 				{invalidData && (
-					<p className="login-container__form__error">Użytkownik o takim adresie już istnieje</p>
+					<p className="login-container__form__error">
+						Użytkownik o takim adresie już istnieje
+					</p>
 				)}
 				<br />
 				<input
@@ -79,7 +81,5 @@ function Register() {
 		</div>
 	);
 }
-
-
 
 export default Register;
