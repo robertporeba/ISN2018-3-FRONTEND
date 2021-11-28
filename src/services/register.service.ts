@@ -1,5 +1,5 @@
 import { IAuth } from '../interfaces/auth';
-import axiosInstance from '../Utils/axios';
+import axiosInstance from '../utils/axios';
 class RegisterService {
 	register(registerData: IAuth) {
 		return axiosInstance
@@ -9,13 +9,9 @@ class RegisterService {
 				type: registerData.type,
 			})
 			.then((response) => {
-				
-
 				return response.data;
 			});
 	}
-
-	
 }
 
 export default new RegisterService();

@@ -1,4 +1,4 @@
-import axiosInstance from '../Utils/axios';
+import axiosInstance from '../utils/axios';
 
 class UserService {
 	getUserInfo() {

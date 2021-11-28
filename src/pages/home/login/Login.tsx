@@ -1,11 +1,17 @@
 import React, { useEffect, useState } from 'react';
+import { history } from '../../../utils/history';
 import { IAuth } from '../../../interfaces/auth';
-import authService from '../../../services/auth.service';
+import { login } from '../../../actions/auth';
 import { useForm } from 'react-hook-form';
+import { useDispatch, useSelector } from 'react-redux';
+import useUserIdentity from '../../../hooks/use-user-identity';
 
 import './Login.scss';
 
 function Login() {
+	const dispatch: any = useDispatch();
+	const isAuth = useUserIdentity();
+
 	const [invalidData, setInvalidData] = useState(false);
 	const {
 		register,
@@ -13,19 +19,23 @@ function Login() {
 		formState: { errors },
 	} = useForm();
 	const onSubmit = (data: any) => {
-		authService
-			.login({
-				email: data.email,
-				password: data.password,
-				type: '',
+		const loginModel: IAuth = {
+			email: data.email,
+			password: data.password,
+			type: '',
+		};
+		dispatch(login(loginModel))
+			.then(() => {
+				history.push('/admin-panel');
 			})
-			.then((res) => {
-				console.log(JSON.stringify(res));
-			})
-			.catch((e) => {
-				setInvalidData(true);
+			.catch(() => {
+				setInvalidData(false);
 			});
 	};
+
+	if (isAuth.userRoles !== null) {
+		history.push('/admin-panel');
+	}
 
 	return (
 		<div className="login-container">
