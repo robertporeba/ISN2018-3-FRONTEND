@@ -5,4 +5,39 @@
 	background-color: white;
 	align-items: center;
 	flex-direction: column;
+
+	&__forms {
+		display: flex;
+		height: calc(100% - 50px);
+		justify-content: center;
+		align-items: center;
+	}
+}
+
+.logout{
+
+	text-decoration: none;
+	color: white;
+}
+
+p{
+	color: black;
+	margin-bottom: 20px;
+	font-weight: 600;
+}
+button{
+
+	
+	background-color: #1d2245;
+	border-radius: 5px;
+	border: none;
+	color: white;
+	height: 30px;
+	cursor: pointer;
+	padding-left: 20px;
+	padding-right: 20px;
+	transition: all 0.3s ease;
+	width: 120px;
+	bottom: 20px;
+	left: 140px;
 }
