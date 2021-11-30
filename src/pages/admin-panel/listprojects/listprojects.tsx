@@ -5,6 +5,7 @@ import useUserIdentity from '../../../hooks/use-user-identity';
 import { useDispatch } from 'react-redux';
 import { logout } from '../../../actions/auth';
 import { history } from '../../../utils/history';
+import HeaderPanel from '../../../components/headerpanel/HeaderPanel';
 
 
 function Listproject() {
@@ -22,9 +23,9 @@ function Listproject() {
 	return (
      
 
-        
-        <div className="project-container">
-            <Table singleLine>
+        <div className="admin-panel-container">
+        <HeaderPanel setPanelForm={setPanelForm} />
+        <div className="admin-panel-container__forms"><Table singleLine>
                 <Table.Header>
                     <Table.Row>
                         <Table.HeaderCell>Nazwa Projektu</Table.HeaderCell>
@@ -57,8 +58,11 @@ function Listproject() {
                     
                 </Table.Body>
                 
-            </Table>
+            </Table></div>
+        
+        <p>Uprawnienia: {isAuth.userRoles}</p>
         </div>
+      
 	);
 }
 

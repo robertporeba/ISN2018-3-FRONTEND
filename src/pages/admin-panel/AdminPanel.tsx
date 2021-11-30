@@ -11,6 +11,8 @@ import HeaderPanel from '../../components/headerpanel/HeaderPanel';
 import Login from '../home/login/Login';
 import Register from '../home/register/Register';
 import Addproject from './addproject/addproject';
+import Home from '../home/Home';
+import HomePanel from './home/Home';
 
 
 function AdminPanel() {
@@ -29,7 +31,7 @@ function AdminPanel() {
 		
 		<div className="admin-panel-container">
 			<HeaderPanel setPanelForm={setPanelForm} />
-			<div className="admin-panel-container__forms">{panelForm ? <AdminPanel/> :<Register/>}</div>
+			<div className="admin-panel-container__forms">{panelForm ? <HomePanel/> :<Register/>}</div>
 			
 			<p>Uprawnienia: {isAuth.userRoles}</p>
 			</div>
