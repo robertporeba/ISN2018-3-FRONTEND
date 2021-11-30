@@ -1,5 +1,3 @@
-import React, { useState } from 'react';
-
 const DragEnd = (result: any, columns: any, setColumns: any) => {
     if (!result.destination) return;
     const { source, destination } = result;

@@ -1,18 +1,34 @@
-import React, { useState } from 'react';
+import React, { useState} from 'react';
 import { v4 as uuid } from 'uuid';
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import "./App.css";
 import DragEnd from "./components/DragEnd";
+import Input from "./components/Input";
 
-const backendItems = [
-    { id: uuid(), content: "Zadanie 1" },
-    { id: uuid(), content: "Zadanie 2" }
+export interface ITodo {
+    content: string,
+}
+
+export class Todo implements ITodo {
+
+    id: any;
+    content: string;
+
+    constructor(content: string = '') {
+        this.id = uuid();
+        this.content = content;
+    }
+}
+
+const backendItems: Todo[] = [
+    new Todo('Zadanie 1'),
+    new Todo('Zadanie 2')
 ];
 
 const backendColumns = {
     [uuid()]: {
         name: "Do zrobienia",
-        items: backendItems
+        items: Todo
     },
     [uuid()]: {
         name: "W trakcie",
@@ -25,26 +41,22 @@ const backendColumns = {
 };
 
 
+
 function App() {
     const [columns, setColumns] = useState(backendColumns);
+
+    const [todos, setTodos] = useState(backendItems);
+    function addTodo(todo: Todo) {
+        setTodos([todo, ...todos])
+    }
+
     return (
         <div>
             <div className="heading">KanbanMusic</div>
         <div style={{ display: "flex", justifyContent: "center", height: "100vh" }}>  
             <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-                <h2>{"Nowe zadanie"}</h2>
-                <div style={{ marginLeft: 30, marginRight: 30 }}>
-                        <div style={{ display: "flex", alignItems: "center" }}>
-                            <input
-                                type="text"
-                                placeholder="Wpisz zadanie"
-                                className="box"
-                            />
-                            <button type="submit" className="ok">
-                                OK
-                            </button>
-                        </div>
-                </div>
+                    <h2>{"Nowe zadanie"}</h2>
+                    <Input addTodo={addTodo} />
             </div>
             <DragDropContext onDragEnd={result => DragEnd(result, columns, setColumns)}>
                 {Object.entries(columns).map(([columnId, column]) => {
