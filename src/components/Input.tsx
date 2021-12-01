@@ -17,7 +17,7 @@ function Input({addTodo}: TodoInputProps) {
 		event.preventDefault();
 		console.log('todo: ', todo);
 		addTodo(todo);
-		console.log(todoObj);
+		setTodo(todoObj);
 	}
 
 	function handleTodoChange(event: React.ChangeEvent<HTMLInputElement>) {
@@ -26,7 +26,7 @@ function Input({addTodo}: TodoInputProps) {
 
 	return (
 		<div style={{ marginLeft: 30, marginRight: 30 }} onSubmit={submitTodo}>
-			<div style={{ display: "flex", alignItems: "center" }}>
+			<form style={{ display: "flex", alignItems: "center" }}>
 				<input
 					type="text"
 					placeholder="Wpisz zadanie"
@@ -35,7 +35,7 @@ function Input({addTodo}: TodoInputProps) {
 					onChange={handleTodoChange}
 				/>
 				<button type="submit" className="ok" >OK</button>
-			</div>
+			</form>
 		</div>
 	)
 }

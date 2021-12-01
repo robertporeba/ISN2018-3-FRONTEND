@@ -9,7 +9,7 @@ export interface ITodo {
     content: string,
 }
 
-export class Todo implements ITodo {
+export class Todo{
 
     id: any;
     content: string;
@@ -24,11 +24,10 @@ const backendItems: Todo[] = [
     new Todo('Zadanie 1'),
     new Todo('Zadanie 2')
 ];
-
 const backendColumns = {
     [uuid()]: {
         name: "Do zrobienia",
-        items: Todo
+        items: backendItems
     },
     [uuid()]: {
         name: "W trakcie",
