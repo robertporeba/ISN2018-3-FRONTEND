@@ -27,9 +27,9 @@ export default function HeaderPanel(props: IHeaderProps) {
 			<Link className="header-container__button" to="/listproject" onClick={() => setPanelForm(true)}>
 				Projekty
 			</Link>
-			<button className="header-container__button" onClick={() => setPanelForm(true)}>
+			<Link className="header-container__button" to="/board" onClick={() => setPanelForm(true)}>
 				Tablica
-			</button>
+			</Link>
 			<button className="header-container__button1"><Link onClick={logOut} to={'/'} className="logout">
 					Wyloguj się
 				</Link></button>

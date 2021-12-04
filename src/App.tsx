@@ -10,10 +10,13 @@ import { Admin, User } from './interfaces/auth';
 
 
 
+
+
 const Home = lazy(() => import('./pages/home/Home'));
 const UserPage = lazy(() => import('./pages/admin-panel/AdminPanel'));
 const Addproject=lazy(()=>import ('./pages/admin-panel/addproject/addproject'));
 const Listproject=lazy(()=>import ('./pages/admin-panel/listprojects/listprojects'));
+const Board=lazy(()=>import ('./pages/admin-panel/board/board'));
 function App() {
 	return (
 		<div className="App">
@@ -28,6 +31,9 @@ function App() {
 					</RoleRoute>
 					<RoleRoute path="/listproject" role={[User, Admin]}>
 						<Listproject/>
+					</RoleRoute>
+					<RoleRoute path="/board" role={[User, Admin]}>
+						<Board/>
 					</RoleRoute>
 				</Suspense>
 			</Router>
