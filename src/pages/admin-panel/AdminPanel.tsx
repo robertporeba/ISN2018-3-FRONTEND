@@ -6,7 +6,14 @@ import { history } from '../../utils/history';
 import useUserIdentity from '../../hooks/use-user-identity';
 
 import './AdminPanel.scss';
-import Header from '../../components/header/Header';
+
+import HeaderPanel from '../../components/headerpanel/HeaderPanel';
+import Login from '../home/login/Login';
+import Register from '../home/register/Register';
+import Addproject from './addproject/addproject';
+import Home from '../home/Home';
+import HomePanel from './home/Home';
+
 
 function AdminPanel() {
 	const isAuth = useUserIdentity();
@@ -19,17 +26,17 @@ function AdminPanel() {
 	if (isAuth.userRoles === null) {
 		history.push('/');
 	}
-
+	const [panelForm, setPanelForm] = useState<boolean>(true);
 	return (
+		
 		<div className="admin-panel-container">
-			<Header setLoginForm={() => {}} />
-			<div>
-				<p>Uprawnienia: {isAuth.userRoles}</p>
-				<Link onClick={logOut} to={'/'} className="">
-					Wyloguj się
-				</Link>
+			<HeaderPanel setPanelForm={setPanelForm} />
+			<div className="admin-panel-container__forms">{panelForm ? <HomePanel/> :<Register/>}</div>
+			
+			<p>Uprawnienia: {isAuth.userRoles}</p>
 			</div>
-		</div>
+	
+		
 	);
 }
 
