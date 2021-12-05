@@ -134,11 +134,11 @@ function Kanban() {
       history.push('/');
   }
 
-  const [panelForm, setPanelForm] = useState<boolean>(true);
+  
   return (
 
     <div className="admin-panel-container">
-        <HeaderPanel setPanelForm={setPanelForm} />
+       
     <div className="app">
       
       <div className="app_boards_container">

@@ -163,7 +163,7 @@ function CardInfo(props) {
             <Type />
             <p>Osoba</p>
           </div>
-          <Select
+          <Editable
           
             defaultValue={values.usertask}
             text={values.usertask || "Dodaj osobę"}

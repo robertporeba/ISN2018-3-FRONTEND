@@ -8,6 +8,7 @@ import useUserIdentity from '../../../hooks/use-user-identity';
 
 import './addproject.scss';
 import HeaderPanel from '../../../components/headerpanel/HeaderPanel';
+import { Link } from 'react-router-dom';
 
 function Addproject() {
 	const isAuth = useUserIdentity();
@@ -33,9 +34,6 @@ function Addproject() {
 			<h1 className="login-container__title">Projekt</h1>
 			<form className="login-container__form" >
 				<label className="login-container__form__email">Podaj nazwe Projektu</label>
-				
-				
-		
 			
 				<br />
 				<input type="text"  />
@@ -46,7 +44,10 @@ function Addproject() {
 					className="login-container__form__button"
 					type="submit"
 					value="Stwórz"
+					
+					
 				/>
+				
 			</form>
 		</div>
 			</div>
