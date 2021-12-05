@@ -34,7 +34,7 @@ function App() {
 					<RoleRoute path="/listproject" role={[User, Admin]}>
 						<Listproject/>
 					</RoleRoute>
-					<RoleRoute path="/board" role={[User, Admin]}>
+					<RoleRoute path="/board/:id" role={[User, Admin]}>
 						<Board/>
 					</RoleRoute>
 					<RoleRoute path="/boardv2" role={[User, Admin]}>

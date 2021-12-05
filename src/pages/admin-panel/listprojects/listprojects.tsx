@@ -8,19 +8,34 @@ import { history } from '../../../utils/history';
 import HeaderPanel from '../../../components/headerpanel/HeaderPanel';
 import {ListGroup,ListGroupItem,Button} from 'reactstrap';
 import { Link } from 'react-router-dom';
+import projectService from '../../../services/project.service';
+import { IGetProject } from '../../../interfaces/project';
 
 function Listproject() {
 	const isAuth = useUserIdentity();
 	const dispatch = useDispatch();
 
-	function logOut() {
-		dispatch(logout());
-	}
+    const[projects, setProjects]=useState<any>();
+
+	useEffect(()=>{
+projectService.getallprojects().then((response)=>{
+
+    setProjects(response)
+}).catch((err)=>{
+
+    console.log(err)
+})
+
+    }, [])
+
+    
 
 	if (isAuth.userRoles === null) {
 		history.push('/');
 	}
 	const [panelForm, setPanelForm] = useState<boolean>(true);
+
+
 	return (
      
 
@@ -32,18 +47,16 @@ function Listproject() {
 
         
        <ListGroup>
-           <ListGroupItem className="mt-2"><h2>Projekt 1</h2>
-           <div className="ml-auto">
-               <Button><Link className="btn btn-warming mr-1" to="/board">Pokaż</Link></Button>
-               <Button color="danger">Usuń</Button>
-           </div>
-           </ListGroupItem>
-           <ListGroupItem className="mt-2"><h2>Projekt 1</h2>
-           <div className="ml-auto">
-               <Button><Link className="btn btn-warming mr-1" to="/board">Pokaż</Link></Button>
-               <Button color="danger">Usuń</Button>
-           </div>
-           </ListGroupItem>
+           {projects !== undefined && projects.map((project:any)=>(
+
+<ListGroupItem className="mt-2"><h2>{project.name}</h2>
+<div className="ml-auto">
+    <Button><Link className="btn btn-warming mr-1" to={"/board/" +project.id}>Pokaż</Link></Button>
+    <Button onClick={()=>projectService.deleteproject(project.id)} color="danger"><Link className="btn btn-warming mr-1" to="/listproject">Usuń</Link></Button>
+</div>
+</ListGroupItem>
+           ))}
+          
        </ListGroup>
 
         </div>
