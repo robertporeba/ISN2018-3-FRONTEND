@@ -10,15 +10,13 @@ import { Admin, User } from './interfaces/auth';
 
 import Kanban from './pages/admin-panel/boardv3/Kanban';
 
-
-
-
-
 const Home = lazy(() => import('./pages/home/Home'));
 const UserPage = lazy(() => import('./pages/admin-panel/AdminPanel'));
-const Addproject=lazy(()=>import ('./pages/admin-panel/addproject/addproject'));
-const Listproject=lazy(()=>import ('./pages/admin-panel/listprojects/listprojects'));
-const Board=lazy(()=>import ('./pages/admin-panel/board/board'));
+const Addproject = lazy(() => import('./pages/admin-panel/addproject/addproject'));
+const Listproject = lazy(() => import('./pages/admin-panel/listprojects/listprojects'));
+const Board = lazy(() => import('./pages/admin-panel/board/board'));
+const EditProject = lazy(() => import('./pages/admin-panel/edit-project/edit-project'));
+
 function App() {
 	return (
 		<div className="App">
@@ -29,16 +27,19 @@ function App() {
 						<UserPage />
 					</RoleRoute>
 					<RoleRoute path="/addproject" role={[Admin]}>
-						<Addproject/>
+						<Addproject />
 					</RoleRoute>
 					<RoleRoute path="/listproject" role={[User, Admin]}>
-						<Listproject/>
+						<Listproject />
 					</RoleRoute>
 					<RoleRoute path="/board/:id" role={[User, Admin]}>
-						<Board/>
+						<Board />
+					</RoleRoute>
+					<RoleRoute path="/editproject/:id" role={[Admin]}>
+						<EditProject />
 					</RoleRoute>
 					<RoleRoute path="/boardv2" role={[User, Admin]}>
-						<Kanban/>
+						<Kanban />
 					</RoleRoute>
 				</Suspense>
 			</Router>

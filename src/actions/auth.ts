@@ -32,6 +32,7 @@ export const registerToSystem = (loginData: IAuth) => (dispatch: Dispatch<IAuthA
 export const login = (loginData: IAuth) => (dispatch: Dispatch<IAuthAction>) => {
 	return AuthService.login(loginData).then(
 		(userToken) => {
+			console.log(userToken);
 			dispatch({
 				type: LOGIN_SUCCESS,
 				payload: { userToken },

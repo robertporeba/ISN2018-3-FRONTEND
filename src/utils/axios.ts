@@ -8,7 +8,7 @@ instance.defaults.baseURL = baseURL + 'api/';
 instance.interceptors.request.use((request) => {
 	const userToken = localStorage.getItem('userToken');
 	if (userToken) {
-		axios.defaults.headers.common['Authorization'] = 'Bearer ' + userToken;
+		instance.defaults.headers.common['Authorization'] = 'Bearer ' + userToken;
 	}
 
 	return request;
