@@ -1,64 +1,65 @@
 import React, { useEffect, useState } from 'react';
 import './listprojects.scss';
-import { Button, Table } from 'semantic-ui-react'
+
 import useUserIdentity from '../../../hooks/use-user-identity';
 import { useDispatch } from 'react-redux';
 import { logout } from '../../../actions/auth';
 import { history } from '../../../utils/history';
 import HeaderPanel from '../../../components/headerpanel/HeaderPanel';
-
+import {ListGroup,ListGroupItem,Button} from 'reactstrap';
+import { Link } from 'react-router-dom';
+import projectService from '../../../services/project.service';
+import { IGetProject } from '../../../interfaces/project';
 
 function Listproject() {
 	const isAuth = useUserIdentity();
 	const dispatch = useDispatch();
 
-	function logOut() {
-		dispatch(logout());
-	}
+    const[projects, setProjects]=useState<any>();
+
+	useEffect(()=>{
+projectService.getallprojects().then((response)=>{
+
+    setProjects(response)
+}).catch((err)=>{
+
+    console.log(err)
+})
+
+    }, [])
+
+    
 
 	if (isAuth.userRoles === null) {
 		history.push('/');
 	}
 	const [panelForm, setPanelForm] = useState<boolean>(true);
+
+
 	return (
      
 
         <div className="admin-panel-container">
         <HeaderPanel setPanelForm={setPanelForm} />
-        <div className="admin-panel-container__forms"><Table singleLine>
-                <Table.Header>
-                    <Table.Row>
-                        <Table.HeaderCell>Nazwa Projektu</Table.HeaderCell>
-                       
-                        <Table.HeaderCell>Akcja</Table.HeaderCell>
-                    </Table.Row>
-                </Table.Header>
+        <h1>Twoje projekty</h1>
+        <div className="admin-panel-container__forms">
 
-                <Table.Body>
-                    <Table.Row>
-                        
-                        <Table.Cell>Moja nazwa projektu</Table.Cell>
-                        <Table.Cell>
 
-    <Button >Wyświetl</Button>
-   <Button >Delete</Button>
-</Table.Cell>
+        
+       <ListGroup>
+           {projects !== undefined && projects.map((project:any)=>(
 
-                    </Table.Row>
-                    <Table.Row>
-                        
-                        <Table.Cell>Kolejny</Table.Cell>
-                        <Table.Cell>
+<ListGroupItem className="mt-2"><h2>{project.name}</h2>
+<div className="ml-auto">
+    <Button><Link className="btn btn-warming mr-1" to={"/board/" +project.id}>Pokaż</Link></Button>
+    <Button onClick={()=>projectService.deleteproject(project.id)} color="danger"><Link className="btn btn-warming mr-1" to="/listproject">Usuń</Link></Button>
+</div>
+</ListGroupItem>
+           ))}
+          
+       </ListGroup>
 
-    <Button >Wyświetl</Button>
-   <Button >Delete</Button>
-</Table.Cell>
-
-                    </Table.Row>
-                    
-                </Table.Body>
-                
-            </Table></div>
+        </div>
         
         <p>Uprawnienia: {isAuth.userRoles}</p>
         </div>
