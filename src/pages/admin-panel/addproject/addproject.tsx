@@ -16,7 +16,6 @@ function Addproject() {
 	const isAuth = useUserIdentity();
 	const dispatch = useDispatch();
 
-
 	const [invalidData, setInvalidData] = useState(false);
 	const [successData, setSuccessData] = useState(false);
 	const {
@@ -28,19 +27,16 @@ function Addproject() {
 		const projectModel: IProject = {
 			name: data.name,
 			author: isAuth.userName?.toString(),
-			
 		};
-		projectService.addproject(projectModel).then((res)=>{
-
-			setSuccessData(true);
-		}).catch((err)=>{
-
-			console.log(err);
-		})
-		
+		projectService
+			.addproject(projectModel)
+			.then((res) => {
+				setSuccessData(true);
+			})
+			.catch((err) => {
+				console.log(err);
+			});
 	};
-
-	
 
 	if (isAuth.userRoles === null) {
 		history.push('/');
@@ -48,39 +44,35 @@ function Addproject() {
 	const [panelForm, setPanelForm] = useState<boolean>(true);
 
 	return (
-        
 		<div className="admin-panel-container">
 			<HeaderPanel setPanelForm={setPanelForm} />
 			<div className="admin-panel-container__forms">
+				<div className="login-container">
+					<h1 className="login-container__title">Projekt</h1>
+					<form className="login-container__form" onSubmit={handleSubmit(onSubmit)}>
+						<label className="login-container__form__email">Podaj nazwe Projektu</label>
 
-			<div className="login-container">
-            
-			<h1 className="login-container__title">Projekt</h1>
-			<form className="login-container__form" onSubmit={handleSubmit(onSubmit)} >
-				<label className="login-container__form__email">Podaj nazwe Projektu</label>
-			
-				<br />
-				<input type="text" {...register('name', { required: true })} />
-				<br />
-				{successData && (
-					<p className="project-container__form__success">Poprawnie dodałeś projekt</p>
-				)}
-				
-				<input
-					onClick={() => setInvalidData(false)}
-					className="login-container__form__button"
-					type="submit"
-					value="Stwórz"
-					
-					
-				/>
-				
-			</form>
-		</div>
+						<br />
+						<input type="text" {...register('name', { required: true })} />
+						<br />
+						{successData && (
+							<p className="project-container__form__success">
+								Poprawnie dodałeś projekt
+							</p>
+						)}
+
+						<input
+							onClick={() => setInvalidData(false)}
+							className="login-container__form__button"
+							type="submit"
+							value="Stwórz"
+						/>
+					</form>
+				</div>
 			</div>
-			
+
 			<p>Uprawnienia: {isAuth.userRoles}</p>
-			</div>
+		</div>
 	);
 }
 
