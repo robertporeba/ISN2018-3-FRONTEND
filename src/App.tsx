@@ -8,7 +8,7 @@ import Loader from './components/util/Loader';
 import './App.scss';
 import { Admin, User } from './interfaces/auth';
 
-import Kanban from './pages/admin-panel/boardv3/Kanban';
+
 
 const Home = lazy(() => import('./pages/home/Home'));
 const UserPage = lazy(() => import('./pages/admin-panel/AdminPanel'));
@@ -16,6 +16,7 @@ const Addproject = lazy(() => import('./pages/admin-panel/addproject/addproject'
 const Listproject = lazy(() => import('./pages/admin-panel/listprojects/listprojects'));
 const Board = lazy(() => import('./pages/admin-panel/board/board'));
 const EditProject = lazy(() => import('./pages/admin-panel/edit-project/edit-project'));
+const Kanban=lazy(()=>import('./pages/admin-panel/boardv3/Kanban'));
 
 function App() {
 	return (
@@ -38,9 +39,7 @@ function App() {
 					<RoleRoute path="/editproject/:id" role={[Admin]}>
 						<EditProject />
 					</RoleRoute>
-					<RoleRoute path="/boardv2" role={[User, Admin]}>
-						<Kanban />
-					</RoleRoute>
+				
 				</Suspense>
 			</Router>
 		</div>

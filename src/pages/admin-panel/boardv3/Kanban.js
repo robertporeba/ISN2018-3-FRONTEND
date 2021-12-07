@@ -19,15 +19,7 @@ function Kanban() {
     cid: "",
   });
 
-  const addboardHandler = (name) => {
-    const tempBoards = [...boards];
-    tempBoards.push({
-      id: Date.now() + Math.random() * 2,
-      title: name,
-      cards: [],
-    });
-    setBoards(tempBoards);
-  };
+
 
   const removeBoard = (id) => {
     const index = boards.findIndex((item) => item.id === id);
@@ -145,7 +137,7 @@ function Kanban() {
         <div className="app_boards">
           {boards.map((item) => (
             <Board
-              key={item.id}
+             
               board={item}
               addCard={addCardHandler}
               removeBoard={() => removeBoard(item.id)}
@@ -156,14 +148,7 @@ function Kanban() {
             />
           ))}
           <div className="app_boards_last">
-            <Editable
-              displayClass="app_boards_add-board"
-              editClass="app_boards_add-board_edit"
-              placeholder="Wpisz nazwe kolumny"
-              text="Dodaj kolumne"
-              buttonText="Dodaj kolumne"
-              onSubmit={addboardHandler}
-            />
+            
           </div>
         </div>
       </div>

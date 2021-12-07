@@ -31,6 +31,13 @@ function Editable(props) {
             onChange={(event) => setInputText(event.target.value)}
             autoFocus
           />
+           <input
+            type="text"
+            value={inputText}
+            placeholder={props.placeholder || props.text}
+            onChange={(event) => setInputText(event.target.value)}
+            autoFocus
+          />
           <div className="editable_edit_footer">
             <button type="submit">{props.buttonText || "Dodaj"}</button>
             <X onClick={() => setIsEditable(false)} className="closeIcon" />
