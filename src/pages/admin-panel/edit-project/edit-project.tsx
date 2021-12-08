@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { history } from '../../../utils/history';
 import useUserIdentity from '../../../hooks/use-user-identity';
 import { useParams } from 'react-router-dom';
@@ -19,16 +19,6 @@ function EditProject() {
 	const [userName, setUserName] = useState<any>();
 	const { id } = useParams<IEditParam>();
 	let idNumber = parseInt(id);
-	useEffect(() => {
-		userProjectService
-			.getalluserprojects(idNumber)
-			.then((response) => {
-				setUsers(response);
-			})
-			.catch((err) => {
-				console.log(err);
-			});
-	}, [users, idNumber]);
 
 	if (isAuth.userRoles === null) {
 		history.push('/');
@@ -50,23 +40,30 @@ function EditProject() {
 			});
 	};
 
-	const getAllUserProjects = () => {
+	const getAllUserProjects = useCallback(() => {
 		userProjectService
 			.getalluserprojects(idNumber)
 			.then((response) => {
 				setUsers(response);
+				console.log(response);
 			})
 			.catch((err) => {
 				console.log(err);
 			});
-	};
+	}, [idNumber]);
+
+	useEffect(() => {
+		getAllUserProjects();
+	}, [getAllUserProjects]);
 
 	const deleteUser = (name: string, projectId: number) => {
 		const projectModel: IUserProjects = {
 			userName: name,
 			projectId: projectId,
 		};
-		userProjectService.deleteproject(projectModel);
+		userProjectService.deleteproject(projectModel).then(() => {
+			getAllUserProjects();
+		});
 	};
 
 	return (

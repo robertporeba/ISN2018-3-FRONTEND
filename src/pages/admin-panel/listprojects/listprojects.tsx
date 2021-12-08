@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import './listprojects.scss';
 
 import useUserIdentity from '../../../hooks/use-user-identity';
@@ -17,28 +17,21 @@ function Listproject() {
 
 	const [projects, setProjects] = useState<any>();
 	const [projectName, setProjectName] = useState<string>('');
+	const getAllProjects = useCallback(() => {
+		projectService
+			.getallprojects()
+			.then((response) => {
+				setProjects(response);
+				console.log(response);
+			})
+			.catch((err) => {
+				console.log(err);
+			});
+	}, []);
 
 	useEffect(() => {
-		projectService
-			.getallprojects()
-			.then((response) => {
-				setProjects(response);
-			})
-			.catch((err) => {
-				console.log(err);
-			});
-	}, [projects]);
-
-	const getAllProjects = () => {
-		projectService
-			.getallprojects()
-			.then((response) => {
-				setProjects(response);
-			})
-			.catch((err) => {
-				console.log(err);
-			});
-	};
+		getAllProjects();
+	}, [getAllProjects]);
 
 	const addProject = () => {
 		const projectModel: IProject = {
@@ -58,6 +51,7 @@ function Listproject() {
 	if (isAuth.userRoles === null) {
 		history.push('/');
 	}
+
 	const [panelForm, setPanelForm] = useState<boolean>(true);
 
 	return (
@@ -96,14 +90,16 @@ function Listproject() {
 									<Button>
 										<Link
 											className="btn btn-warming mr-1"
-											to={'/board/' + project.id}
+											to={'/kanban/' + project.id}
 										>
 											Pokaż
 										</Link>
 									</Button>
 									<Button
 										onClick={() => {
-											projectService.deleteproject(project.id);
+											projectService.deleteproject(project.id).then(() => {
+												getAllProjects();
+											});
 										}}
 										color="danger"
 									>
