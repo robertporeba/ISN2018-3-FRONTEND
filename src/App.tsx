@@ -8,7 +8,7 @@ import Loader from './components/util/Loader';
 import './App.scss';
 import { Admin, User } from './interfaces/auth';
 
-import Kanban from './pages/admin-panel/boardv3/Kanban';
+import Kanban from './pages/admin-panel/kanban/kanban';
 
 const Home = lazy(() => import('./pages/home/Home'));
 const UserPage = lazy(() => import('./pages/admin-panel/AdminPanel'));
@@ -38,7 +38,7 @@ function App() {
 					<RoleRoute path="/editproject/:id" role={[Admin]}>
 						<EditProject />
 					</RoleRoute>
-					<RoleRoute path="/boardv2" role={[User, Admin]}>
+					<RoleRoute path="/kanban/:id" role={[User, Admin]}>
 						<Kanban />
 					</RoleRoute>
 				</Suspense>

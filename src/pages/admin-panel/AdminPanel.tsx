@@ -14,7 +14,6 @@ import Addproject from './addproject/addproject';
 import Home from '../home/Home';
 import HomePanel from './home/Home';
 
-
 function AdminPanel() {
 	const isAuth = useUserIdentity();
 	const dispatch = useDispatch();
@@ -28,15 +27,14 @@ function AdminPanel() {
 	}
 	const [panelForm, setPanelForm] = useState<boolean>(true);
 	return (
-		
 		<div className="admin-panel-container">
 			<HeaderPanel setPanelForm={setPanelForm} />
-			<div className="admin-panel-container__forms">{panelForm ? <HomePanel/> :<Register/>}</div>
-			
-			<p>Uprawnienia: {isAuth.userRoles}</p>
+			<div className="admin-panel-container__forms">
+				{panelForm ? <HomePanel /> : <Register />}
 			</div>
-	
-		
+
+			<p>Uprawnienia: {isAuth.userRoles}</p>
+		</div>
 	);
 }
 
