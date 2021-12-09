@@ -3,12 +3,13 @@ import { DragDropContext, DropTarget, DragSource } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 import useUserIdentity from '../../../hooks/use-user-identity';
 import update from 'immutability-helper';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import HeaderPanel from '../../../components/headerpanel/HeaderPanel';
-
+import { CheckSquare, Clock, MoreHorizontal } from "react-feather";
 import './kanban.scss';
 import taskService from '../../../services/task.service';
-
+import { Dropdown } from 'reactstrap';
+import { ListGroup, ListGroupItem, Button } from 'reactstrap';
 const labels = [1, 2, 3];
 const labelsMap = {
 	1: 'To Do',
@@ -20,33 +21,44 @@ const classes = {
 	board: {
 		display: 'flex',
 		margin: '0 auto',
-		width: '90vw',
+		marginLeft:'300px',
+		height:'auto',
+		width: '900px',
 		fontFamily: 'Arial, "Helvetica Neue", sans-serif',
 	},
 	column: {
-		minWidth: 200,
+		minWidth: 300,
 		width: '18vw',
-		height: '80vh',
+		height: '800px',
 		margin: '0 auto',
-		backgroundColor: '#566573',
+		backgroundColor: '#cfe0f8',
+		border: '2px solid #1d2245',
 	},
 	columnHead: {
 		textAlign: 'center',
 		padding: 10,
 		fontSize: '1.2em',
-		backgroundColor: '#7F8C8D',
+		backgroundColor: '#27c647',
 		color: 'white',
+		fontWeight:'600',
+
 	},
 	item: {
 		padding: 10,
 		margin: 10,
+		borderRadius:'10px',
 		fontSize: '0.8em',
+		fontWeight:'700',
 		cursor: 'pointer',
 		backgroundColor: 'white',
+		height:'80px',
 	},
 };
 
 function Kanban() {
+
+	const [showDropdown, setShowDropdown] = useState(false);
+
 	const [tasks, setTasks] = useState([]);
 	const [singleTask, setSingleTask] = useState({});
 	const [taskName, setTaskName] = useState('');
@@ -60,6 +72,7 @@ function Kanban() {
 		taskService.getalltasks(projectId).then((res) => {
 			setTasks(res);
 			setForceReload(!forceReload);
+			
 		});
 	}, []);
 	console.log(tasks);
@@ -109,9 +122,13 @@ function Kanban() {
 	return (
 		<main>
 			<HeaderPanel setPanelForm={setPanelForm} />
-			<input type="text" onChange={(e) => setTaskName(e.target.value)} />
-			<button onClick={() => add()}>Dodaj task</button>
+			
 			<section style={classes.board}>
+			<div className="task_add">
+								<h3>Dodaj taska</h3>	
+								<input type="text" onChange={(e) => setTaskName(e.target.value)} />
+								<button onClick={() => add()}>Dodaj task</button>
+								</div>
 				{labels.map((channel) => (
 					<KanbanColumn status={channel}>
 						<div style={classes.column}>
@@ -121,13 +138,62 @@ function Kanban() {
 									.filter((item) => item.statusId === channel)
 									.map((item) => (
 										<KanbanItem id={item.id} onDrop={updateTask}>
-											<div style={classes.item}>{item.name}</div>
+											<div style={classes.item}>
+												<div className="taskTitle">
+												<h3 class="task_title">Nazwa: {item.name}</h3>
+												
+												</div>
+												
+												<div className='task_body'>
+									
+		  <div className='task_bodydesc'>
+												<h3>Autor: {item.author}</h3>
+												<h3>Przypisana: {item.assignedUser}</h3>
+												<h3>Data: {item.createDate}</h3>
+												<h3>Priorytet: {item.priorityId}</h3>
+												</div>
+												<div
+            className="card_top_more"
+            onClick={(event) => {
+              event.stopPropagation();
+              setShowDropdown(true);
+            }}
+          >
+            <MoreHorizontal />
+            {showDropdown && (
+              <Dropdown
+                class="board_dropdown"
+                onClose={() => setShowDropdown(false)}
+              >
+                	<Button
+										onClick={() => {
+											taskService.deletetask(item.id).then(() => {
+												taskService.getalltasks(projectId);
+											});
+										}}
+										color="danger"
+									>
+									<Link className="btn btn-warming mr-1" to={'/kanban/' + projectId}>
+											Usuń task
+										</Link>
+									</Button>
+              </Dropdown>
+            )}
+          </div>
+												</div>
+												
+												</div>
 										</KanbanItem>
 									))}
 							</div>
 						</div>
+						
+						
+
 					</KanbanColumn>
+								
 				))}
+				
 			</section>
 		</main>
 	);

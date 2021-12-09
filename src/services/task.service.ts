@@ -21,7 +21,7 @@ class TaskService {
 		});
 	}
 	deletetask(id: number) {
-		return axiosInstance.post('/project/delete?id=' + id).then((response) => {
+		return axiosInstance.post('/task/delete?id=' + id).then((response) => {
 			return response.data;
 		});
 	}
