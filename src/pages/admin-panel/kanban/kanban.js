@@ -1,28 +1,19 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { DragDropContext, DropTarget, DragSource } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
+import useUserIdentity from '../../../hooks/use-user-identity';
 import update from 'immutability-helper';
+import { useParams } from 'react-router-dom';
+import HeaderPanel from '../../../components/headerpanel/HeaderPanel';
 
-const tasks = [
-	{ _id: 1, title: 'First Task', status: 'backlog' },
-	{ _id: 2, title: 'Second Task', status: 'backlog' },
-	{ _id: 3, title: 'Third Task', status: 'backlog' },
-	{ _id: 4, title: 'Fourth Task', status: 'new' },
-	{ _id: 5, title: 'Fifth Task', status: 'new' },
-	{ _id: 6, title: 'Sixth Task', status: 'going' },
-	{ _id: 7, title: 'Seventh Task', status: 'review' },
-	{ _id: 8, title: 'Eighth Task', status: 'review' },
-	{ _id: 9, title: 'Ninth Task', status: 'done' },
-	{ _id: 10, title: 'Tenth Task', status: 'done' },
-];
+import './kanban.scss';
+import taskService from '../../../services/task.service';
 
-const labels = ['backlog', 'new', 'going', 'review', 'done'];
+const labels = [1, 2, 3];
 const labelsMap = {
-	backlog: 'Backlog',
-	new: 'To Do',
-	going: 'In Progress',
-	review: 'Review',
-	done: 'Done',
+	1: 'To Do',
+	2: 'In Progress',
+	3: 'Done',
 };
 
 const classes = {
@@ -55,70 +46,94 @@ const classes = {
 	},
 };
 
-class Kanban extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			tasks,
-		};
-	}
-	update = (id, status) => {
-		const { tasks } = this.state;
-		const task = tasks.find((task) => task._id === id);
-		// console.log("task", task);
-		task.status = status;
+function Kanban() {
+	const [tasks, setTasks] = useState([]);
+	const [singleTask, setSingleTask] = useState({});
+	const [taskName, setTaskName] = useState('');
+	const [forceReload, setForceReload] = useState(1);
+	const [panelForm, setPanelForm] = useState(true);
+	const isAuth = useUserIdentity();
+	const { id } = useParams();
+	let projectId = parseInt(id);
+
+	useEffect(() => {
+		taskService.getalltasks(projectId).then((res) => {
+			setTasks(res);
+			setForceReload(!forceReload);
+		});
+	}, []);
+	console.log(tasks);
+	const updateTask = (id, statusId) => {
+		const task = tasks.find((task) => task.id === id);
+		task.statusId = statusId;
 		const taskIndex = tasks.indexOf(task);
 		const newTasks = update(tasks, {
 			[taskIndex]: { $set: task },
 		});
-		console.log('newTask', newTasks);
-		this.setState({ tasks: newTasks });
+		console.log('reload', newTasks);
+		setTasks(newTasks);
+		setForceReload(!forceReload);
 	};
 
-	add = (id, title, status) => {
-		const { tasks } = this.state;
-		const taskToAdd = { _id: id, title: title, status: status };
-		const task = tasks.push(taskToAdd);
-		const taskIndex = tasks.indexOf(task);
-		const newTasks = update(tasks, {
-			[taskIndex]: { $set: task },
-		});
-		console.log('newTask', newTasks);
-		this.forceUpdate();
+	const add = () => {
+		taskService
+			.addtask({
+				name: taskName,
+				author: isAuth.userName,
+				assignedUser: isAuth.userName,
+				statusId: 1,
+				priorityId: 2,
+				projectId: projectId,
+			})
+			.then((res) => {
+				console.log(res);
+				const taskToAdd = { id: res.id, name: taskName, statusId: '1' };
+				const task = tasks.push(taskToAdd);
+				const taskIndex = tasks.indexOf(task);
+				const newTasks = update(tasks, {
+					[taskIndex]: { $set: task },
+				});
+
+				console.log('newTask', newTasks);
+				setForceReload(!forceReload);
+			})
+			.catch((err) => {
+				console.log(err);
+			});
 	};
 
-	render() {
-		const { tasks } = this.state;
-		return (
-			<main>
-				<header className="header">Example Kanban Board </header>
-				<button onClick={() => this.add('111', 'test', 'done')}>Dodaj task</button>
-				<section style={classes.board}>
-					{labels.map((channel) => (
-						<KanbanColumn status={channel}>
-							<div style={classes.column}>
-								<div style={classes.columnHead}>{labelsMap[channel]}</div>
-								<div>
-									{tasks
-										.filter((item) => item.status === channel)
-										.map((item) => (
-											<KanbanItem id={item._id} onDrop={this.update}>
-												<div style={classes.item}>{item.title}</div>
-											</KanbanItem>
-										))}
-								</div>
+	useEffect(() => {
+		console.log('reload');
+	}, [forceReload]);
+
+	return (
+		<main>
+			<HeaderPanel setPanelForm={setPanelForm} />
+			<input type="text" onChange={(e) => setTaskName(e.target.value)} />
+			<button onClick={() => add()}>Dodaj task</button>
+			<section style={classes.board}>
+				{labels.map((channel) => (
+					<KanbanColumn status={channel}>
+						<div style={classes.column}>
+							<div style={classes.columnHead}>{labelsMap[channel]}</div>
+							<div>
+								{tasks
+									.filter((item) => item.statusId === channel)
+									.map((item) => (
+										<KanbanItem id={item.id} onDrop={updateTask}>
+											<div style={classes.item}>{item.name}</div>
+										</KanbanItem>
+									))}
 							</div>
-						</KanbanColumn>
-					))}
-				</section>
-			</main>
-		);
-	}
+						</div>
+					</KanbanColumn>
+				))}
+			</section>
+		</main>
+	);
 }
 
 export default DragDropContext(HTML5Backend)(Kanban);
-
-// Column
 
 const boxTarget = {
 	drop(props) {
@@ -137,8 +152,6 @@ KanbanColumn = DropTarget('kanbanItem', boxTarget, (connect, monitor) => ({
 	isOver: monitor.isOver(),
 	canDrop: monitor.canDrop(),
 }))(KanbanColumn);
-
-// Item
 
 const boxSource = {
 	beginDrag(props) {
