@@ -16,6 +16,7 @@ const Addproject = lazy(() => import('./pages/admin-panel/addproject/addproject'
 const Listproject = lazy(() => import('./pages/admin-panel/listprojects/listprojects'));
 const Board = lazy(() => import('./pages/admin-panel/board/board'));
 const EditProject = lazy(() => import('./pages/admin-panel/edit-project/edit-project'));
+const EditTask=lazy(()=> import('./pages/admin-panel/edit-task/edit-task'));
 
 function App() {
 	return (
@@ -40,6 +41,9 @@ function App() {
 					</RoleRoute>
 					<RoleRoute path="/kanban/:id" role={[User, Admin]}>
 						<Kanban />
+					</RoleRoute>
+					<RoleRoute path="/editask/:id" role={[User, Admin]}>
+						<EditTask />
 					</RoleRoute>
 				</Suspense>
 			</Router>

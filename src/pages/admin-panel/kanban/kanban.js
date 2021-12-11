@@ -177,6 +177,13 @@ function Kanban() {
 											Usuń task
 										</Link>
 									</Button>
+									<Button
+									
+									>
+									<Link className="btn btn-warming mr-1" to={'/editask/' + item.id}>
+											Edytuj task
+										</Link>
+									</Button>
               </Dropdown>
             )}
           </div>

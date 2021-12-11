@@ -20,6 +20,12 @@ class TaskService {
 			return response.data;
 		});
 	}
+
+	gettask(id: number) {
+		return axiosInstance.get('/task/get?id=' + id).then((response) => {
+			return response.data;
+		});
+	}
 	deletetask(id: number) {
 		return axiosInstance.post('/task/delete?id=' + id).then((response) => {
 			return response.data;
