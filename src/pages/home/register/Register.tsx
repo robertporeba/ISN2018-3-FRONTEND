@@ -9,6 +9,10 @@ import { registerToSystem } from '../../../actions/auth';
 import './Register.scss';
 
 function Register() {
+	const [
+		isSuccessfullySubmitted,
+		setIsSuccessfullySubmitted,
+	  ] = React.useState(false);
 	const dispatch: any = useDispatch();
 	const isAuth = useUserIdentity();
 	const [invalidData, setInvalidData] = useState(false);
@@ -26,6 +30,7 @@ function Register() {
 		dispatch(registerToSystem(registerModel))
 			.then(() => {
 				console.log('success');
+				setIsSuccessfullySubmitted(true);
 			})
 			.catch(() => {
 				setInvalidData(false);
@@ -70,6 +75,7 @@ function Register() {
 						Użytkownik o takim adresie już istnieje
 					</p>
 				)}
+				{isSuccessfullySubmitted && (<div className="login-container__form__error">Użytkownik został zarejestrowany</div>)}
 				<br />
 				<input
 					onClick={() => setInvalidData(false)}
