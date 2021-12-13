@@ -30,6 +30,7 @@ function EditTask() {
 			.then((response) => {
 				setTasks(response);
 				console.log(response);
+			
 			})
 			.catch((err) => {
 				console.log(err);
@@ -39,10 +40,13 @@ function EditTask() {
 	useEffect(() => {
 		getTask();
 	}, [getTask]);
-	
+
 
 	return (
+
 		<div className="admin-panel-container">
+			{tasks && (
+				<>
 		<HeaderPanel setPanelForm={setPanelForm} />
 		
 		
@@ -50,18 +54,23 @@ function EditTask() {
 		
 			<h1 className="login-container__title">Edycja Taska</h1>
 			<form className="login-container__form">
-			
+		
 				<label className="login-container__form__email">Nazwa</label>
 				<br />
-				<input type="text"  />
+				
+				<input type="text" value={tasks.name} />
 				<br />
 				<label className="login-container__form__password">Osoba przypisana</label>
 				<br />
-				<input type="text" />
+				<input type="text" value={tasks.assignedUser} />
 				<br />
 				<label className="login-container__form__password">Priorytet</label>
 				<br />
-				<input type="text"  />
+				<select value={tasks.priorityName}>
+					<option value="LOW">LOW</option>
+					<option value="MEDIUM">MEDIUM</option>
+					<option value="HIGH">HIGH</option>
+				</select>
 				
 				 	<br />
 				
@@ -72,12 +81,15 @@ function EditTask() {
 					value="Edytuj"
 				/>
 				
-				
+			
 			</form>
 			
 		</div>
-		
+	</>
+	)}
+
 		</div>
+		
 	);
 }
 

@@ -150,7 +150,7 @@ function Kanban() {
 												<h3>Autor: {item.author}</h3>
 												<h3>Przypisana: {item.assignedUser}</h3>
 												<h3>Data: {item.createDate}</h3>
-												<h3>Priorytet: {item.priorityId}</h3>
+												<h3>Priorytet: {item.priorityName}</h3>
 												</div>
 												<div
             className="card_top_more"
