@@ -34,6 +34,7 @@ function Register() {
 			})
 			.catch(() => {
 				setInvalidData(false);
+				setIsSuccessfullySubmitted(false)
 			});
 	};
 
