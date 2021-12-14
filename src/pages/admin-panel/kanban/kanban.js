@@ -5,24 +5,25 @@ import useUserIdentity from '../../../hooks/use-user-identity';
 import update from 'immutability-helper';
 import { Link, useParams } from 'react-router-dom';
 import HeaderPanel from '../../../components/headerpanel/HeaderPanel';
-import { CheckSquare, Clock, MoreHorizontal } from "react-feather";
+import { CheckSquare, Clock, MoreHorizontal } from 'react-feather';
 import './kanban.scss';
 import taskService from '../../../services/task.service';
 import { Dropdown } from 'reactstrap';
 import { ListGroup, ListGroupItem, Button } from 'reactstrap';
+import { format } from 'date-fns';
+import { pl } from 'date-fns/locale';
 const labels = [1, 2, 3];
 const labelsMap = {
 	1: 'To Do',
 	2: 'In Progress',
 	3: 'Done',
 };
-
 const classes = {
 	board: {
 		display: 'flex',
 		margin: '0 auto',
-		marginLeft:'300px',
-		height:'auto',
+		marginLeft: '300px',
+		height: 'auto',
 		width: '900px',
 		fontFamily: 'Arial, "Helvetica Neue", sans-serif',
 	},
@@ -40,23 +41,21 @@ const classes = {
 		fontSize: '1.2em',
 		backgroundColor: '#27c647',
 		color: 'white',
-		fontWeight:'600',
-
+		fontWeight: '600',
 	},
 	item: {
 		padding: 10,
 		margin: 10,
-		borderRadius:'10px',
+		borderRadius: '10px',
 		fontSize: '0.8em',
-		fontWeight:'700',
+		fontWeight: '700',
 		cursor: 'pointer',
 		backgroundColor: 'white',
-		height:'80px',
+		height: '80px',
 	},
 };
 
 function Kanban() {
-
 	const [showDropdown, setShowDropdown] = useState(false);
 
 	const [tasks, setTasks] = useState([]);
@@ -71,21 +70,30 @@ function Kanban() {
 	useEffect(() => {
 		taskService.getalltasks(projectId).then((res) => {
 			setTasks(res);
-			setForceReload(!forceReload);
-			
 		});
-	}, []);
-	console.log(tasks);
+	}, [forceReload, projectId]);
 	const updateTask = (id, statusId) => {
-		const task = tasks.find((task) => task.id === id);
-		task.statusId = statusId;
-		const taskIndex = tasks.indexOf(task);
-		const newTasks = update(tasks, {
-			[taskIndex]: { $set: task },
-		});
-		console.log('reload', newTasks);
-		setTasks(newTasks);
-		setForceReload(!forceReload);
+		taskService
+			.changestatus({
+				id: id,
+				statusId: statusId,
+				projectId: projectId,
+			})
+			.then((res) => {
+				console.log('asd');
+				const task = tasks.find((task) => task.id === id);
+				task.statusId = statusId;
+				const taskIndex = tasks.indexOf(task);
+				const newTasks = update(tasks, {
+					[taskIndex]: { $set: task },
+				});
+				console.log(res, newTasks);
+				setTasks(newTasks);
+				setForceReload(!forceReload);
+			})
+			.catch((err) => {
+				console.log(err);
+			});
 	};
 
 	const add = () => {
@@ -122,13 +130,13 @@ function Kanban() {
 	return (
 		<main>
 			<HeaderPanel setPanelForm={setPanelForm} />
-			
+
 			<section style={classes.board}>
-			<div className="task_add">
-								<h3>Dodaj taska</h3>	
-								<input type="text" onChange={(e) => setTaskName(e.target.value)} />
-								<button onClick={() => add()}>Dodaj task</button>
-								</div>
+				<div className="task_add">
+					<h3>Dodaj taska</h3>
+					<input type="text" onChange={(e) => setTaskName(e.target.value)} />
+					<button onClick={() => add()}>Dodaj task</button>
+				</div>
 				{labels.map((channel) => (
 					<KanbanColumn status={channel}>
 						<div style={classes.column}>
@@ -138,69 +146,87 @@ function Kanban() {
 									.filter((item) => item.statusId === channel)
 									.map((item) => (
 										<KanbanItem id={item.id} onDrop={updateTask}>
-											<div style={classes.item}>
-												<div className="taskTitle">
-												<h3 class="task_title">Nazwa: {item.name}</h3>
-												
+											<Link to={'/editask/' + item.id}>
+												<div style={classes.item}>
+													<div className="taskTitle">
+														<h3 class="task_title">
+															Nazwa: {item.name}
+														</h3>
+													</div>
+
+													<div className="task_body">
+														<div className="task_bodydesc">
+															<h3>Autor: {item.author}</h3>
+															<h3>Przypisana: {item.assignedUser}</h3>
+															<h3>
+																Data:{' '}
+																{format(
+																	new Date(item.createDate),
+																	'dd MMMM yyyy',
+																	{ locale: pl }
+																)}
+															</h3>
+															<h3>Priorytet: {item.priorityName}</h3>
+														</div>
+														<div
+															className="card_top_more"
+															onClick={(event) => {
+																event.stopPropagation();
+																setShowDropdown(true);
+															}}
+														>
+															<MoreHorizontal />
+															{showDropdown && (
+																<Dropdown
+																	class="board_dropdown"
+																	onClose={() =>
+																		setShowDropdown(false)
+																	}
+																>
+																	<Button
+																		onClick={() => {
+																			taskService
+																				.deletetask(item.id)
+																				.then(() => {
+																					taskService
+																						.getalltasks(
+																							projectId
+																						)
+																						.then(
+																							(
+																								res
+																							) => {
+																								setForceReload(
+																									!forceReload
+																								);
+																							}
+																						);
+																				});
+																		}}
+																		color="danger"
+																	>
+																		<Link
+																			className="btn btn-warming mr-1"
+																			to={
+																				'/kanban/' +
+																				projectId
+																			}
+																		>
+																			Usuń task
+																		</Link>
+																	</Button>
+																</Dropdown>
+															)}
+														</div>
+													</div>
 												</div>
-												
-												<div className='task_body'>
-									
-		  <div className='task_bodydesc'>
-												<h3>Autor: {item.author}</h3>
-												<h3>Przypisana: {item.assignedUser}</h3>
-												<h3>Data: {item.createDate}</h3>
-												<h3>Priorytet: {item.priorityName}</h3>
-												</div>
-												<div
-            className="card_top_more"
-            onClick={(event) => {
-              event.stopPropagation();
-              setShowDropdown(true);
-            }}
-          >
-            <MoreHorizontal />
-            {showDropdown && (
-              <Dropdown
-                class="board_dropdown"
-                onClose={() => setShowDropdown(false)}
-              >
-                	<Button
-										onClick={() => {
-											taskService.deletetask(item.id).then(() => {
-												taskService.getalltasks(projectId);
-											});
-										}}
-										color="danger"
-									>
-									<Link className="btn btn-warming mr-1" to={'/kanban/' + projectId}>
-											Usuń task
-										</Link>
-									</Button>
-									<Button
-									
-									>
-									<Link className="btn btn-warming mr-1" to={'/editask/' + item.id}>
-											Edytuj task
-										</Link>
-									</Button>
-              </Dropdown>
-            )}
-          </div>
-												</div>
-												
-												</div>
+											</Link>
 										</KanbanItem>
 									))}
 							</div>
 						</div>
-						
-						
-
 					</KanbanColumn>
-								
 				))}
-				
 			</section>
 		</main>
 	);
