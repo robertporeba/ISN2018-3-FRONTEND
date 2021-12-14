@@ -31,6 +31,29 @@ class TaskService {
 			return response.data;
 		});
 	}
+	changestatus(statusData: any) {
+		return axiosInstance
+			.post('/task/changestatus', {
+				id: statusData.id,
+				statusId: statusData.statusId,
+				projectId: statusData.projectId,
+			})
+			.then((response) => {
+				return response.data;
+			});
+	}
+	updatetask(statusData: any) {
+		return axiosInstance
+			.post('/task/update', {
+				id: statusData.id,
+				name: statusData.name,
+				assignedUser: statusData.assignedUser,
+				priorityId: statusData.priorityId,
+			})
+			.then((response) => {
+				return response.data;
+			});
+	}
 }
 
 export default new TaskService();
