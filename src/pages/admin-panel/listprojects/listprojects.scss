@@ -40,7 +40,6 @@ button {
 }
 h1 {
 	font-size: 50px;
-	margin-right: 30px;
 	text-align: right;
 }
 img {
@@ -61,6 +60,9 @@ button {
 	border-radius: 8px;
 	color: white;
 	background-color: #1d2245;
+	&:hover {
+		background-color: darken(#2439d8, 10);
+	}
 }
 .item-title {
 	margin-right: 10px;
