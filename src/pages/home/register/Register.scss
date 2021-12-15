@@ -41,6 +41,7 @@
 			font-size: 13px;
 			margin-top: 3px;
 		}
+	
 		&__email {
 			color: white;
 		}
@@ -48,6 +49,16 @@
 			color: white;
 		}
 	}
+
+	
+}
+.login-container__form__success{
+
+	
+		color: green;
+		font-weight: 200;
+		font-size: 13px;
+		margin-top: 3px;
 
 	
 }
