@@ -47,6 +47,7 @@ class TaskService {
 			.post('/task/update', {
 				id: statusData.id,
 				name: statusData.name,
+				description: statusData.description,
 				assignedUser: statusData.assignedUser,
 				priorityId: statusData.priorityId,
 			})
