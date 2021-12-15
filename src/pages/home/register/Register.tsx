@@ -12,6 +12,7 @@ function Register() {
 	const dispatch: any = useDispatch();
 	const isAuth = useUserIdentity();
 	const [invalidData, setInvalidData] = useState(false);
+	const [goodData, setGoodData] = useState(false);
 	const {
 		register,
 		handleSubmit,
@@ -26,6 +27,7 @@ function Register() {
 		dispatch(registerToSystem(registerModel))
 			.then(() => {
 				console.log('success');
+				setGoodData(true);
 			})
 			.catch(() => {
 				setInvalidData(false);
@@ -70,6 +72,10 @@ function Register() {
 						Użytkownik o takim adresie już istnieje
 					</p>
 				)}
+				{goodData && (
+					<p className="login-container__form__success">
+						Użytkownik został zarejestrowany poprawnie 
+					</p>)}
 				<br />
 				<input
 					onClick={() => setInvalidData(false)}

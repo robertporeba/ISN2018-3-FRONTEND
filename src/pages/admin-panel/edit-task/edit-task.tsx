@@ -73,8 +73,9 @@ function EditTask() {
 
 							<input
 								type="text"
-								onChange={(e) => setName(e.target.value)}
+								defaultValue={tasks.name}
 								value={name}
+								onChange={(e) => setName(e.target.value)}
 							/>
 							<br />
 							<label className="login-container__form__password">
@@ -83,13 +84,14 @@ function EditTask() {
 							<br />
 							<input
 								type="text"
+								defaultValue={tasks.assignedUser}
 								value={assignedUser}
 								onChange={(e) => setAssignedUser(e.target.value)}
 							/>
 							<br />
 							<label className="login-container__form__password">Priorytet</label>
 							<br />
-							<select value={priority} onChange={(e) => setPriority(e.target.value)}>
+							<select defaultValue={tasks.priorityId} value={priority} onChange={(e) => setPriority(e.target.value)}>
 								<option value="1">LOW</option>
 								<option value="2">MEDIUM</option>
 								<option value="3">HIGH</option>
@@ -97,12 +99,23 @@ function EditTask() {
 
 							<br />
 
-							<input
-								onClick={() => updateTask()}
-								className="login-container__form__button"
-								type="button"
-								value="Edytuj"
-							/>
+							
+							<Button
+									onClick={() => updateTask()}
+									className="login-container__form__button"
+								>
+									<Link
+																			className="btn btn-warming mr-1"
+																			to={
+																				'/kanban/' +
+																				tasks.projectId
+																			}
+																		>
+																			Edytuj task
+																		</Link>
+								</Button>
+
+
 						</form>
 					</div>
 				</>

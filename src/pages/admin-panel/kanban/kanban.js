@@ -12,6 +12,7 @@ import { Dropdown } from 'reactstrap';
 import { ListGroup, ListGroupItem, Button } from 'reactstrap';
 import { format } from 'date-fns';
 import { pl } from 'date-fns/locale';
+
 const labels = [1, 2, 3];
 const labelsMap = {
 	1: 'To Do',
@@ -103,7 +104,7 @@ function Kanban() {
 				author: isAuth.userName,
 				assignedUser: isAuth.userName,
 				statusId: 1,
-				priorityId: 2,
+				priorityId: 1,
 				projectId: projectId,
 			})
 			.then((res) => {
@@ -146,14 +147,15 @@ function Kanban() {
 									.filter((item) => item.statusId === channel)
 									.map((item) => (
 										<KanbanItem id={item.id} onDrop={updateTask}>
-											<Link to={'/editask/' + item.id}>
+											
 												<div style={classes.item}>
+												<Link to={'/editask/' + item.id}>
 													<div className="taskTitle">
 														<h3 class="task_title">
 															Nazwa: {item.name}
 														</h3>
 													</div>
-
+													</Link>
 													<div className="task_body">
 														<div className="task_bodydesc">
 															<h3>Autor: {item.author}</h3>
@@ -171,7 +173,7 @@ function Kanban() {
 														<div
 															className="card_top_more"
 															onClick={(event) => {
-																event.stopPropagation();
+																event.stopPropagation(item.id);
 																setShowDropdown(true);
 															}}
 														>
@@ -183,7 +185,7 @@ function Kanban() {
 																		setShowDropdown(false)
 																	}
 																>
-																	<Button
+																	<Button 
 																		onClick={() => {
 																			taskService
 																				.deletetask(item.id)
@@ -206,7 +208,7 @@ function Kanban() {
 																		color="danger"
 																	>
 																		<Link
-																			className="btn btn-warming mr-1"
+																			className="btn_usun"
 																			to={
 																				'/kanban/' +
 																				projectId
@@ -215,21 +217,24 @@ function Kanban() {
 																			Usuń task
 																		</Link>
 																	</Button>
+									
 																</Dropdown>
 															)}
 														</div>
 													</div>
 												</div>
-											</Link>
+											
 										</KanbanItem>
 									))}
 							</div>
+			
 						</div>
 					</KanbanColumn>
 				))}
 			</section>
 		</main>
 	);
+	
 }
 
 export default DragDropContext(HTML5Backend)(Kanban);
