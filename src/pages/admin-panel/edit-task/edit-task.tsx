@@ -70,13 +70,14 @@ function EditTask() {
 				<>
 					<HeaderPanel setPanelForm={setPanelForm} />
 
-					<div className="login-container">
+					<div className="login-container" style={{ margin: 10, display: "flex", justifyContent: "center"}}>
 						<h1 className="login-container__title">Edycja Taska</h1>
 						<form className="login-container__form">
 							<label className="login-container__form__email">Nazwa</label>
 							<br />
 
 							<input
+								className='input'
 								type="text"
 								defaultValue={tasks.name}
 								value={name}
@@ -85,13 +86,9 @@ function EditTask() {
 							<br />
 							<label className="login-container__form__email">Opis</label>
 							<br />
-
-							<input
-								type="text"
-								defaultValue={tasks.description}
+							<textarea 	defaultValue={tasks.description} className='input'
 								value={description}
-								onChange={(e) => setDescription(e.target.value)}
-							/>
+								onChange={(e) => setDescription(e.target.value)} />
 							<br />
 							<label className="login-container__form__password">
 								Osoba przypisana
@@ -99,6 +96,7 @@ function EditTask() {
 							<br />
 							<input
 								type="text"
+								className='input'
 								defaultValue={tasks.assignedUser}
 								value={assignedUser}
 								onChange={(e) => setAssignedUser(e.target.value)}
@@ -121,10 +119,13 @@ function EditTask() {
 							<Button
 								onClick={() => updateTask()}
 								className="login-container__form__button"
+								style={{ marginLeft: 10, width:200}}
+								
 							>
 								<Link
-									className="btn btn-warming mr-1"
+									className="btn1" 
 									to={'/kanban/' + tasks.projectId}
+									style={{ margin: 10}}
 								>
 									Edytuj task
 								</Link>
@@ -133,6 +134,7 @@ function EditTask() {
 					</div>
 				</>
 			)}
+			<p>Uprawnienia: {isAuth.userRoles}</p>
 		</div>
 	);
 }

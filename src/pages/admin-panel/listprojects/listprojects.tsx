@@ -6,7 +6,7 @@ import { useDispatch } from 'react-redux';
 import { logout } from '../../../actions/auth';
 import { history } from '../../../utils/history';
 import HeaderPanel from '../../../components/headerpanel/HeaderPanel';
-import { ListGroup, ListGroupItem, Button } from 'reactstrap';
+import { ListGroup, ListGroupItem, Button, Alert } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import projectService from '../../../services/project.service';
 import { IGetProject, IProject } from '../../../interfaces/project';
@@ -17,6 +17,8 @@ function Listproject() {
 
 	const [projects, setProjects] = useState<any>();
 	const [projectName, setProjectName] = useState<string>('');
+	const [goodData, setGoodData] = useState(false);
+	const [goodDeleteData, setGoodDeleteData] = useState(false);
 	const getAllProjects = useCallback(() => {
 		projectService
 			.getallprojects()
@@ -42,6 +44,7 @@ function Listproject() {
 			.addproject(projectModel)
 			.then((res) => {
 				getAllProjects();
+				setGoodData(true);
 			})
 			.catch((err) => {
 				console.log(err);
@@ -60,10 +63,23 @@ function Listproject() {
 			<h1>Twoje projekty</h1>
 			<div className="admin-panel-container__forms">
 				<ListGroup>
+				{goodData && (
+					 <div className="alert alert-primary" role="alert">
+					Poprawnie dodałes projekt
+				   </div>)}
+				   {goodDeleteData && (
+					 <div className="alert alert-primary" role="alert">
+					Poprawnie usunięto projekt
+				   </div>)}
+					<ListGroupItem className="justify-content-between">
+						
 					{isAuth.userRoles === 'Admin' && (
-						<div className={'add-wrapper'}>
+
+
+						<div className={'add-wrapper'} style={{ margin: 50, display: "flex", justifyContent: "center"}}>
 							<input
-								className={'add-input'}
+								className={'input'}
+								placeholder="Wpisz nazwę projektu"
 								type={'text'}
 								onChange={(e) => setProjectName(e.target.value)}
 							></input>
@@ -72,6 +88,7 @@ function Listproject() {
 							</Button>
 						</div>
 					)}
+					</ListGroupItem >
 					{projects !== undefined &&
 						projects.map((project: any) => (
 							<ListGroupItem className="mt-2">
@@ -99,6 +116,7 @@ function Listproject() {
 										onClick={() => {
 											projectService.deleteproject(project.id).then(() => {
 												getAllProjects();
+												setGoodDeleteData(true);
 											});
 										}}
 										color="danger"
@@ -111,6 +129,7 @@ function Listproject() {
 							</ListGroupItem>
 						))}
 				</ListGroup>
+				
 			</div>
 
 			<p>Uprawnienia: {isAuth.userRoles}</p>
