@@ -141,14 +141,14 @@ function Kanban() {
 					<KanbanColumn status={channel}>
 						<div style={classes.column}>
 							<div style={classes.columnHead}>{labelsMap[channel]}</div>
-							<div>
+							<div >
 								{tasks
 									.filter((item) => item.statusId === channel)
 									.map((item) => (
-										<KanbanItem id={item.id} onDrop={updateTask}>
+										<KanbanItem  id={item.id} onDrop={updateTask}>
 											
 												<div style={classes.item}>
-												<Link to={'/editask/' + item.id}>
+												<Link className='goToEdit' to={'/editask/' + item.id}>
 													<div className="taskTitle">
 														<h3 class="task_title">
 															Nazwa: {item.name}
@@ -176,7 +176,7 @@ function Kanban() {
 																setShowDropdown(true);
 															}}
 														>
-															<MoreHorizontal />
+															<MoreHorizontal className='click' />
 															{showDropdown && (
 																<Dropdown
 																	class="board_dropdown"
@@ -248,7 +248,7 @@ const boxTarget = {
 
 class KanbanColumn extends React.Component {
 	render() {
-		return this.props.connectDropTarget(<div>{this.props.children}</div>);
+		return this.props.connectDropTarget(<div className="columns">{this.props.children}</div>);
 	}
 }
 
@@ -276,7 +276,7 @@ const boxSource = {
 
 class KanbanItem extends React.Component {
 	render() {
-		return this.props.connectDragSource(<div>{this.props.children}</div>);
+		return this.props.connectDragSource(<div className="task">{this.props.children}</div>);
 	}
 }
 
