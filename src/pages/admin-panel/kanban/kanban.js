@@ -22,17 +22,18 @@ const labelsMap = {
 const classes = {
 	board: {
 		display: 'flex',
+		justifyContent: "center",
 		margin: '0 auto',
-		marginLeft: '300px',
 		height: 'auto',
-		width: '900px',
+		width: '90vw',
 		fontFamily: 'Arial, "Helvetica Neue", sans-serif',
+		
 	},
 	column: {
 		minWidth: 300,
 		width: '18vw',
-		height: '800px',
-		margin: '0 auto',
+		height: '100%',
+		margin: '5px',
 		backgroundColor: '#cfe0f8',
 		border: '2px solid #1d2245',
 	},
@@ -52,7 +53,7 @@ const classes = {
 		fontWeight: '700',
 		cursor: 'pointer',
 		backgroundColor: 'white',
-		height: '80px',
+		height: 'auto',
 	},
 };
 
@@ -131,13 +132,11 @@ function Kanban() {
 	return (
 		<main>
 			<HeaderPanel setPanelForm={setPanelForm} />
-
+			<div style={{ margin: 50, display: "flex", justifyContent: "center"}}>
+			<input type="text" placeholder="Wpisz nazwę task" className="input" onChange={(e) => setTaskName(e.target.value)} />
+			<button className="submit" onClick={() => add()}>Dodaj task</button>
+			</div>
 			<section style={classes.board}>
-				<div className="task_add">
-					<h3>Dodaj taska</h3>
-					<input type="text" onChange={(e) => setTaskName(e.target.value)} />
-					<button onClick={() => add()}>Dodaj task</button>
-				</div>
 				{labels.map((channel) => (
 					<KanbanColumn status={channel}>
 						<div style={classes.column}>
@@ -232,7 +231,9 @@ function Kanban() {
 					</KanbanColumn>
 				))}
 			</section>
+			<p style={{ margin: 10, display: "flex", justifyContent: "center"}}>Uprawnienia: {isAuth.userRoles}</p>
 		</main>
+		
 	);
 	
 }

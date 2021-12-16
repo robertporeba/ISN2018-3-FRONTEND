@@ -17,6 +17,7 @@ function EditProject() {
 	const isAuth = useUserIdentity();
 	const [users, setUsers] = useState<any>();
 	const [userName, setUserName] = useState<any>();
+	const [goodData, setGoodData] = useState(false);
 	const { id } = useParams<IEditParam>();
 	let idNumber = parseInt(id);
 
@@ -34,6 +35,7 @@ function EditProject() {
 			.adduserproject(userProjectModel)
 			.then((res) => {
 				getAllUserProjects();
+				setGoodData(true);
 			})
 			.catch((err) => {
 				console.log(err);
@@ -71,9 +73,15 @@ function EditProject() {
 			<HeaderPanel setPanelForm={setPanelForm} />
 			<div className="admin-panel-container__forms">
 				<div>
-					<div className={'add-wrapper'}>
+				{goodData && (
+					 <div className="alert alert-primary" role="alert">
+					Poprawnie dodałes dostęp
+				   </div>)}
+					<div className={'add-wrapper'} style={{ margin: 50, display: "flex", justifyContent: "center"}}>
+						
 						<input
-							className={'add-input'}
+							className={'input'}
+							placeholder="Wpisz osobę"
 							type={'text'}
 							onChange={(e) => setUserName(e.target.value)}
 						></input>
@@ -81,9 +89,12 @@ function EditProject() {
 							Nadaj dostęp
 						</Button>
 					</div>
+					<ListGroup>
+					
 					{users !== undefined &&
 						users.map((user: any) => (
-							<div className={'content'}>
+							<ListGroupItem className="mt-2" style={{ margin: 10, display: "flex", justifyContent: "center"}}>
+							
 								<div>{user.userName}</div>
 								<Button
 									onClick={() => deleteUser(user.userName, user.projectId)}
@@ -91,8 +102,10 @@ function EditProject() {
 								>
 									Usuń
 								</Button>
-							</div>
+							
+							</ListGroupItem>
 						))}
+						</ListGroup>
 				</div>
 			</div>
 			<p>Uprawnienia: {isAuth.userRoles}</p>
