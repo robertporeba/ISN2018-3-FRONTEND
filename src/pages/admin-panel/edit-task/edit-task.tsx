@@ -102,6 +102,16 @@ function EditTask() {
 								onChange={(e) => setAssignedUser(e.target.value)}
 							/>
 							<br />
+							<br />
+							<br />
+							<form className="upload-container"
+								action="/upload" 
+								method="post" 
+							>
+								<input type="file" name="file" className="custom-file-input" style={{color: "white"}}/>
+            					<input type="submit" value="Prześlij"></input>
+							</form>
+							<br />
 							<label className="login-container__form__password">Priorytet</label>
 							<br />
 							<select
@@ -114,6 +124,9 @@ function EditTask() {
 								<option value="3">HIGH</option>
 							</select>
 
+							<br />
+							<br />
+							<br />
 							<br />
 
 							<Button

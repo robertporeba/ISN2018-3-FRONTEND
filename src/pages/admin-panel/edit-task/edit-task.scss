@@ -36,6 +36,11 @@
 				background-color: darken(#27c647, 10);
 			}
 		}
+			&__upload-container{
+				&__custom-file-input{
+					color: rgb(128, 62, 62);
+				}
+			}
 		&__error {
 			color: red;
 			font-weight: 200;

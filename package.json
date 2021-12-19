@@ -17,6 +17,7 @@
 		"axios": "^0.24.0",
 		"date-fns": "^2.27.0",
 		"dayjs": "^1.10.7",
+		"huncwot": "^0.59.1",
 		"immutability-helper": "^3.1.1",
 		"jwt-decode": "^3.1.2",
 		"node-sass": "^6.0.1",
