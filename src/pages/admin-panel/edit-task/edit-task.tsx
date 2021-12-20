@@ -25,6 +25,8 @@ function EditTask() {
 	const [description, setDescription] = useState<any>();
 	const [name, setName] = useState<any>();
 	const [assignedUser, setAssignedUser] = useState<any>();
+	const [file, setFile] = useState<any>();
+	const [filePath, setFilePath] = useState<any>();
 	const [priority, setPriority] = useState<any>(1);
 	const { id } = useParams<IEditParam>();
 	let taskId = parseInt(id);
@@ -37,6 +39,8 @@ function EditTask() {
 				setName(response.name);
 				setAssignedUser(response.assignedUser);
 				setPriority(response.priorityId);
+				setFile(response.formFile);
+				setFilePath(response.filename);
 			})
 			.catch((err) => {
 				console.log(err);
@@ -55,6 +59,9 @@ function EditTask() {
 				description: description,
 				assignedUser: assignedUser,
 				priorityId: priority,
+				formFile: file,
+				fileName: filePath,
+
 			})
 			.then((response) => {
 				console.log(response);
@@ -100,6 +107,17 @@ function EditTask() {
 								defaultValue={tasks.assignedUser}
 								value={assignedUser}
 								onChange={(e) => setAssignedUser(e.target.value)}
+							/>
+							<br/>
+							<label className="login-container__form__password">
+								Wczytaj plik
+							</label>
+							<br/>
+							<input
+								type="file"
+								className='inputfile'
+								value={filePath}
+								onChange={(e) => setFilePath(e.target.value)}
 							/>
 							<br />
 							<label className="login-container__form__password">Priorytet</label>

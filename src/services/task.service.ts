@@ -50,6 +50,8 @@ class TaskService {
 				description: statusData.description,
 				assignedUser: statusData.assignedUser,
 				priorityId: statusData.priorityId,
+				fileName:statusData.fileName,
+				formFile:statusData.formFile,
 			})
 			.then((response) => {
 				return response.data;
