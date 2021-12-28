@@ -12,22 +12,16 @@ import { Dropdown } from 'reactstrap';
 import { ListGroup, ListGroupItem, Button } from 'reactstrap';
 import { format } from 'date-fns';
 import { pl } from 'date-fns/locale';
+import columnService from '../../../services/column.service';
 
-const labels = [1, 2, 3];
-const labelsMap = {
-	1: 'To Do',
-	2: 'In Progress',
-	3: 'Done',
-};
 const classes = {
 	board: {
 		display: 'flex',
-		justifyContent: "center",
+		justifyContent: 'center',
 		margin: '0 auto',
 		height: 'auto',
 		width: '90vw',
 		fontFamily: 'Arial, "Helvetica Neue", sans-serif',
-		
 	},
 	column: {
 		minWidth: 300,
@@ -58,6 +52,9 @@ const classes = {
 };
 
 function Kanban() {
+	let [labels, setLabels] = useState([]);
+	let [labelsMap, setLabelsMap] = useState();
+
 	const [showDropdown, setShowDropdown] = useState(false);
 
 	const [tasks, setTasks] = useState([]);
@@ -70,10 +67,24 @@ function Kanban() {
 	let projectId = parseInt(id);
 
 	useEffect(() => {
+		columnService.getallcolumns(projectId).then((res) => {
+			labels = [];
+			labelsMap = {};
+			let columns = {};
+			res.map((column) => {
+				labels.push(column.id);
+				let obj = {};
+				obj[column.id] = column.name;
+				Object.assign(columns, obj);
+			});
+			setLabelsMap(columns);
+			setLabels(labels);
+		});
 		taskService.getalltasks(projectId).then((res) => {
 			setTasks(res);
 		});
-	}, [forceReload, projectId]);
+	}, [forceReload, labels, projectId]);
+
 	const updateTask = (id, statusId) => {
 		taskService
 			.changestatus({
@@ -82,7 +93,6 @@ function Kanban() {
 				projectId: projectId,
 			})
 			.then((res) => {
-				console.log('asd');
 				const task = tasks.find((task) => task.id === id);
 				task.statusId = statusId;
 				const taskIndex = tasks.indexOf(task);
@@ -104,13 +114,12 @@ function Kanban() {
 				name: taskName,
 				author: isAuth.userName,
 				assignedUser: isAuth.userName,
-				statusId: 1,
+				statusId: labels[0],
 				priorityId: 1,
 				projectId: projectId,
 			})
 			.then((res) => {
-				console.log(res);
-				const taskToAdd = { id: res.id, name: taskName, statusId: '1' };
+				const taskToAdd = { id: res.id, name: taskName, statusId: labels[0] };
 				const task = tasks.push(taskToAdd);
 				const taskIndex = tasks.indexOf(task);
 				const newTasks = update(tasks, {
@@ -132,110 +141,116 @@ function Kanban() {
 	return (
 		<main>
 			<HeaderPanel setPanelForm={setPanelForm} />
-			<div style={{ margin: 50, display: "flex", justifyContent: "center"}}>
-			<input type="text" placeholder="Wpisz nazwę task" className="input" onChange={(e) => setTaskName(e.target.value)} />
-			<button className="submit" onClick={() => add()}>Dodaj task</button>
-			</div>
+			{labels.length > 0 ? (
+				<div style={{ margin: 50, display: 'flex', justifyContent: 'center' }}>
+					<input
+						type="text"
+						placeholder="Wpisz nazwę task"
+						className="input"
+						onChange={(e) => setTaskName(e.target.value)}
+					/>
+					<button className="submit" onClick={() => add()}>
+						Dodaj task
+					</button>
+				</div>
+			) : (
+				<div style={{ margin: 50, display: 'flex', justifyContent: 'center' }}>
+					brak kolumn
+				</div>
+			)}
+
 			<section style={classes.board}>
 				{labels.map((channel) => (
 					<KanbanColumn status={channel}>
 						<div style={classes.column}>
 							<div style={classes.columnHead}>{labelsMap[channel]}</div>
-							<div >
+							<div>
 								{tasks
 									.filter((item) => item.statusId === channel)
 									.map((item) => (
-										<KanbanItem  id={item.id} onDrop={updateTask}>
-											
-												<div style={classes.item}>
-												<Link className='goToEdit' to={'/editask/' + item.id}>
+										<KanbanItem id={item.id} onDrop={updateTask}>
+											<div style={classes.item}>
+												<Link
+													className="goToEdit"
+													to={'/editask/' + item.id}
+												>
 													<div className="taskTitle">
 														<h3 class="task_title">
 															Nazwa: {item.name}
 														</h3>
 													</div>
-													</Link>
-													<div className="task_body">
-														<div className="task_bodydesc">
-															<h3>Autor: {item.author}</h3>
-															<h3>Przypisana: {item.assignedUser}</h3>
-															<h3>
-																Data:{' '}
-																{format(
-																	new Date(item.createDate),
-																	'dd MMMM yyyy',
-																	{ locale: pl }
-																)}
-															</h3>
-															<h3>Priorytet: {item.priorityName}</h3>
-														</div>
-														<div
-															className="card_top_more"
-															onClick={(event) => {
-																event.stopPropagation(item.id);
-																setShowDropdown(true);
-															}}
-														>
-															<MoreHorizontal className='click' />
-															{showDropdown && (
-																<Dropdown
-																	class="board_dropdown"
-																	onClose={() =>
-																		setShowDropdown(false)
-																	}
-																>
-																	<Button 
-																		onClick={() => {
-																			taskService
-																				.deletetask(item.id)
-																				.then(() => {
-																					taskService
-																						.getalltasks(
-																							projectId
-																						)
-																						.then(
-																							(
-																								res
-																							) => {
-																								setForceReload(
-																									!forceReload
-																								);
-																							}
-																						);
-																				});
-																		}}
-																		color="danger"
-																	>
-																		<Link
-																			className="btn_usun"
-																			to={
-																				'/kanban/' +
-																				projectId
-																			}
-																		>
-																			Usuń task
-																		</Link>
-																	</Button>
-									
-																</Dropdown>
+												</Link>
+												<div className="task_body">
+													<div className="task_bodydesc">
+														<h3>Autor: {item.author}</h3>
+														<h3>Przypisana: {item.assignedUser}</h3>
+														<h3>
+															Data:{' '}
+															{format(
+																new Date(item.createDate),
+																'dd MMMM yyyy',
+																{ locale: pl }
 															)}
-														</div>
+														</h3>
+														<h3>Priorytet: {item.priorityName}</h3>
+													</div>
+													<div
+														className="card_top_more"
+														onClick={(event) => {
+															event.stopPropagation(item.id);
+															setShowDropdown(true);
+														}}
+													>
+														<MoreHorizontal className="click" />
+														{showDropdown && (
+															<Dropdown
+																class="board_dropdown"
+																onClose={() =>
+																	setShowDropdown(false)
+																}
+															>
+																<Button
+																	onClick={() => {
+																		taskService
+																			.deletetask(item.id)
+																			.then(() => {
+																				taskService
+																					.getalltasks(
+																						projectId
+																					)
+																					.then((res) => {
+																						setForceReload(
+																							!forceReload
+																						);
+																					});
+																			});
+																	}}
+																	color="danger"
+																>
+																	<Link
+																		className="btn_usun"
+																		to={'/kanban/' + projectId}
+																	>
+																		Usuń task
+																	</Link>
+																</Button>
+															</Dropdown>
+														)}
 													</div>
 												</div>
-											
+											</div>
 										</KanbanItem>
 									))}
 							</div>
-			
 						</div>
 					</KanbanColumn>
 				))}
 			</section>
-			<p style={{ margin: 10, display: "flex", justifyContent: "center"}}>Uprawnienia: {isAuth.userRoles}</p>
+			<p style={{ margin: 10, display: 'flex', justifyContent: 'center' }}>
+				Uprawnienia: {isAuth.userRoles}
+			</p>
 		</main>
-		
 	);
-	
 }
 
 export default DragDropContext(HTML5Backend)(Kanban);
