@@ -5,7 +5,7 @@ import { login } from '../../../actions/auth';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import useUserIdentity from '../../../hooks/use-user-identity';
-
+import ReactAudioPlayer from 'react-audio-player';
 import './edit-task.scss';
 import HeaderPanel from '../../../components/headerpanel/HeaderPanel';
 import { Link, useParams } from 'react-router-dom';
@@ -25,6 +25,7 @@ function EditTask() {
 	const [description, setDescription] = useState<any>();
 	const [name, setName] = useState<any>();
 	const [assignedUser, setAssignedUser] = useState<any>();
+	const [file, setFile] = useState<string>();
 	const [priority, setPriority] = useState<any>(1);
 	const { id } = useParams<IEditParam>();
 	let taskId = parseInt(id);
@@ -37,6 +38,7 @@ function EditTask() {
 				setName(response.name);
 				setAssignedUser(response.assignedUser);
 				setPriority(response.priorityId);
+				setFile(response.filename);
 			})
 			.catch((err) => {
 				console.log(err);
@@ -55,6 +57,7 @@ function EditTask() {
 				description: description,
 				assignedUser: assignedUser,
 				priorityId: priority,
+				fileName: file,
 			})
 			.then((response) => {
 				console.log(response);
@@ -64,15 +67,39 @@ function EditTask() {
 			});
 	};
 
+const changeHandler = (event:any) => {
+	
+	const reader=new FileReader();
+	reader.onloadend=()=>{
+		 setFile(reader.result as string);
+	};
+	reader.readAsDataURL(event.target.files[0]);
+		
+	
+};
+
+const dowland=() =>{
+const url=window.URL.createObjectURL(new Blob([tasks.fileName]));
+const link=document.createElement('a');
+link.href=url;
+link.setAttribute("dowland",'file.wav');
+document.body.appendChild(link);
+link.click();
+
+}
+
+console.log(file);
+
+
 	return (
 		<div className="admin-panel-container">
 			{tasks && (
 				<>
 					<HeaderPanel setPanelForm={setPanelForm} />
-
+				
 					<div className="login-container" style={{ margin: 10, display: "flex", justifyContent: "center"}}>
 						<h1 className="login-container__title">Edycja Taska</h1>
-						<form className="login-container__form">
+						<form className="login-container__form" encType="multipart/form-data" >
 							<label className="login-container__form__email">Nazwa</label>
 							<br />
 
@@ -113,9 +140,28 @@ function EditTask() {
 								<option value="2">MEDIUM</option>
 								<option value="3">HIGH</option>
 							</select>
-
+							<br/>
+							<label className="login-container__form__password">
+								Wczytaj plik
+							</label>
+							<br/>
+							<input
+								type="file"
+								className='inputfile'
+								
+								
+								onChange={(e)=>changeHandler(e)}
+							/>
 							<br />
-
+							<br />
+							
+							<ReactAudioPlayer
+  src={tasks.fileName}
+  
+  controls
+/>
+							
+				
 							<Button
 								onClick={() => updateTask()}
 								className="login-container__form__button"
