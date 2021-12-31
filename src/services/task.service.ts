@@ -37,6 +37,8 @@ class TaskService {
 				id: statusData.id,
 				statusId: statusData.statusId,
 				projectId: statusData.projectId,
+				fileName:statusData.fileName,
+				formFile:statusData.formFile,
 			})
 			.then((response) => {
 				return response.data;
