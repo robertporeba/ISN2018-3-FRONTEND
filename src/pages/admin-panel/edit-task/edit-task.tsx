@@ -67,44 +67,42 @@ function EditTask() {
 			});
 	};
 
-const changeHandler = (event:any) => {
-	
-	const reader=new FileReader();
-	reader.onloadend=()=>{
-		 setFile(reader.result as string);
+	const changeHandler = (event: any) => {
+		const reader = new FileReader();
+		reader.onloadend = () => {
+			setFile(reader.result as string);
+		};
+		reader.readAsDataURL(event.target.files[0]);
 	};
-	reader.readAsDataURL(event.target.files[0]);
-		
-	
-};
 
-const dowland=() =>{
-const url=window.URL.createObjectURL(new Blob([tasks.fileName]));
-const link=document.createElement('a');
-link.href=url;
-link.setAttribute("dowland",'file.wav');
-document.body.appendChild(link);
-link.click();
+	const dowland = () => {
+		const url = window.URL.createObjectURL(new Blob([tasks.fileName]));
+		const link = document.createElement('a');
+		link.href = url;
+		link.setAttribute('dowland', 'file.wav');
+		document.body.appendChild(link);
+		link.click();
+	};
 
-}
-
-console.log(file);
-
+	console.log(file);
 
 	return (
 		<div className="admin-panel-container">
 			{tasks && (
 				<>
 					<HeaderPanel setPanelForm={setPanelForm} />
-				
-					<div className="login-container" style={{ margin: 10, display: "flex", justifyContent: "center"}}>
+
+					<div
+						className="login-container"
+						style={{ margin: 10, display: 'flex', justifyContent: 'center' }}
+					>
 						<h1 className="login-container__title">Edycja Taska</h1>
-						<form className="login-container__form" encType="multipart/form-data" >
+						<form className="login-container__form" encType="multipart/form-data">
 							<label className="login-container__form__email">Nazwa</label>
 							<br />
 
 							<input
-								className='input'
+								className="input"
 								type="text"
 								defaultValue={tasks.name}
 								value={name}
@@ -113,9 +111,12 @@ console.log(file);
 							<br />
 							<label className="login-container__form__email">Opis</label>
 							<br />
-							<textarea 	defaultValue={tasks.description} className='input'
+							<textarea
+								defaultValue={tasks.description}
+								className="input"
 								value={description}
-								onChange={(e) => setDescription(e.target.value)} />
+								onChange={(e) => setDescription(e.target.value)}
+							/>
 							<br />
 							<label className="login-container__form__password">
 								Osoba przypisana
@@ -123,7 +124,7 @@ console.log(file);
 							<br />
 							<input
 								type="text"
-								className='input'
+								className="input"
 								defaultValue={tasks.assignedUser}
 								value={assignedUser}
 								onChange={(e) => setAssignedUser(e.target.value)}
@@ -140,38 +141,28 @@ console.log(file);
 								<option value="2">MEDIUM</option>
 								<option value="3">HIGH</option>
 							</select>
-							<br/>
-							<label className="login-container__form__password">
-								Wczytaj plik
-							</label>
-							<br/>
+							<br />
+							<label className="login-container__form__password">Wczytaj plik</label>
+							<br />
 							<input
 								type="file"
-								className='inputfile'
-								
-								
-								onChange={(e)=>changeHandler(e)}
+								className="inputfile"
+								onChange={(e) => changeHandler(e)}
 							/>
 							<br />
 							<br />
-							
-							<ReactAudioPlayer
-  src={tasks.fileName}
-  
-  controls
-/>
-							
-				
+
+							<ReactAudioPlayer src={tasks.fileName} controls />
+
 							<Button
 								onClick={() => updateTask()}
 								className="login-container__form__button"
-								style={{ marginLeft: 10, width:200}}
-								
+								style={{ marginLeft: 10, width: 200 }}
 							>
 								<Link
-									className="btn1" 
+									className="btn1"
 									to={'/kanban/' + tasks.projectId}
-									style={{ margin: 10}}
+									style={{ margin: 10 }}
 								>
 									Edytuj task
 								</Link>
