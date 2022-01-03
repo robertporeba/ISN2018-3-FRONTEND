@@ -159,6 +159,7 @@ console.log(file);
   src={tasks.fileName}
   
   controls
+  title="play"
 />
 							
 				
